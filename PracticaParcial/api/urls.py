@@ -1,6 +1,5 @@
 from django.urls import path
-from .views import ProductoView, VentaView, DetalleVentaView, SolicitudesView, OrdenesView, ProveedorView, ClienteView, BancoView, TarjetaView
-
+from .views import ProductoView, VentaView, DetalleVentaView, SolicitudesView, OrdenesView, ProveedorView, ClienteView, BancoView, TarjetaView,mostrar_clientes,mostrar_bancos,mostrar_proveedores,obtener_tarjetas_cliente,obtener_tarjetas_banco, obtener_tarjetas_proveedor
 urlpatterns=[
     #URL Productos
     path('productos/', ProductoView.as_view(), name='productos_list'),
@@ -37,4 +36,12 @@ urlpatterns=[
     path('tarjeta/listado/', TarjetaView.as_view(), name='listar_tarjetas'),
     path('tarjeta/listado/<int:id>', TarjetaView.as_view(), name='listar_tarjeta'),
     path('tarjeta/listado/<str:texto>', TarjetaView.as_view(), name='listar_tarjeta_cliente'),
+
+    path('clientes_mayores/', mostrar_clientes, name='mostrar_clientes'),
+    path('mostrar_bancos/', mostrar_bancos, name='mostrar_bancos'),
+    path('mostrar_proveedores/', mostrar_proveedores, name='mostrar_proveedores'),
+    path('cliente/<int:cliente_id>/tarjetas/', obtener_tarjetas_cliente, name='obtener_tarjetas_cliente'),
+
+    path('banco/<int:id_banco>/tarjetas/', obtener_tarjetas_banco, name='obtener_tarjetas_banco'),
+    path('proveedor/<int:id_proveedor>/tarjetas/', obtener_tarjetas_proveedor, name='obtener_tarjetas_proveedor'),
 ]

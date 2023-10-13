@@ -402,3 +402,115 @@ class TarjetaView(View):
             else:
                 datos = {'message': "Tarjetas no encontrados"}
             return JsonResponse(datos)
+
+
+#Consultas raw
+def mostrar_clientes(request):
+ 
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT nombres, DPI, telefono, edad FROM api_cliente")
+        resultados = cursor.fetchall()
+    clientes_mayores = []
+    for resultado in resultados:
+        cliente = {
+            'nombres': resultado[0],
+            'DPI': resultado[1],
+            'telefono': resultado[2],
+            'edad': resultado[3],
+        }
+        clientes_mayores.append(cliente)
+    return JsonResponse({'clientes_mayores': clientes_mayores})
+
+def mostrar_bancos(request):
+
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT nombre, direccion, telefono FROM api_banco")
+        resultados = cursor.fetchall()
+    bancos_data = []
+    for resultado in resultados:
+        banco_info = {
+            'nombre': resultado[0],
+            'direccion': resultado[1],
+            'telefono': resultado[2],
+        }
+        bancos_data.append(banco_info)
+    return JsonResponse({'bancos': bancos_data})
+
+def mostrar_proveedores(request):
+
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT nombre_proveedor, direccion, telefono FROM api_proveedor")
+        resultados = cursor.fetchall()
+    proveedores = []
+    for resultado in resultados:
+        proveedor = {
+            'nombre_proveedor': resultado[0],
+            'direccion': resultado[1],
+            'telefono': resultado[2],
+        }
+        proveedores.append(proveedor)
+
+    return JsonResponse({'proveedores': proveedores})
+
+def obtener_tarjetas_cliente(request, cliente_id):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM api_tarjeta WHERE idCliente_id = %s", [cliente_id])
+        resultados = cursor.fetchall()
+
+    tarjetas_cliente = []
+    for resultado in resultados:
+        tarjeta_info = {
+            'id': resultado[0],
+            'num_tarjeta ': resultado[1],
+            'CVV': resultado[2],
+            'fecha_inicio': resultado[3],
+            'fecha_final': resultado[4],
+            'idBanco_id ': resultado[5],
+            'idCliente_id ': resultado[6],
+            'idProveedor_id ': resultado[7], 
+        }
+        tarjetas_cliente.append(tarjeta_info)
+
+    return JsonResponse({'tarjetas_cliente': tarjetas_cliente})
+
+def obtener_tarjetas_banco(request, id_banco):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM api_tarjeta WHERE idBanco_id = %s", [id_banco])
+        resultados = cursor.fetchall()
+
+    tarjetas_banco = []
+    for resultado in resultados:
+        tarjeta = {
+            'id': resultado[0],
+            'num_tarjeta ': resultado[1],
+            'CVV': resultado[2],
+            'fecha_inicio': resultado[3],
+            'fecha_final': resultado[4],
+            'idBanco_id ': resultado[5],
+            'idCliente_id ': resultado[6],
+            'idProveedor_id ': resultado[7], 
+        }
+        tarjetas_banco.append(tarjeta)
+
+    return JsonResponse({'tarjetas_banco': tarjetas_banco})
+
+def obtener_tarjetas_proveedor(request, id_proveedor):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM api_tarjeta WHERE idProveedor_id = %s", [id_proveedor])
+        resultados = cursor.fetchall()
+
+    tarjetas_proveedor = []
+    for resultado in resultados:
+        tarjeta = {
+           'id': resultado[0],
+            'num_tarjeta ': resultado[1],
+            'CVV': resultado[2],
+            'fecha_inicio': resultado[3],
+            'fecha_final': resultado[4],
+            'idBanco_id ': resultado[5],
+            'idCliente_id ': resultado[6],
+            'idProveedor_id ': resultado[7], 
+        }
+        tarjetas_proveedor.append(tarjeta)
+
+    return JsonResponse({'tarjetas_proveedor': tarjetas_proveedor})
