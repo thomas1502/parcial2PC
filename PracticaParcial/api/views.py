@@ -402,12 +402,3 @@ class TarjetaView(View):
             else:
                 datos = {'message': "Tarjetas no encontrados"}
             return JsonResponse(datos)
-        
-    def raw():
-        consulta_sql = "SELECT * FROM api_tarjeta;"
-        # Ejecuta la consulta SQL
-        with connection.cursor() as cursor:
-            cursor.execute(consulta_sql)
-            resultados = cursor.fetchall()
-        
-        return JsonResponse(resultados)
