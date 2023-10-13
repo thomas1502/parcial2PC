@@ -45,3 +45,31 @@ class Ordenes(models.Model):
 
     def __str__(self):
         return f"Ordenes {self.id}"
+
+
+#tablas de ejercicio
+
+class Proveedor(models.Model):
+    Nombre_proveedor = models.CharField(max_length=100)
+    Direccion = models.CharField(max_length=200)
+    Telefono = models.CharField(max_length=15)
+
+    def __str__(self):
+        return self.Nombre_proveedor
+
+class Cliente(models.Model):
+    Nombres = models.CharField(max_length=100)
+    DPI = models.CharField(max_length=20, unique=True)
+    Telefono = models.CharField(max_length=15)
+    Edad = models.PositiveIntegerField()
+
+    def __str__(self):
+        return self.Nombres
+
+class Banco(models.Model):
+    Nombre = models.CharField(max_length=100)
+    Direccion = models.CharField(max_length=200)
+    Telefono = models.CharField(max_length=15)
+
+    def __str__(self):
+        return self.Nombre
