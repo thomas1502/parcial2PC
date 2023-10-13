@@ -403,7 +403,6 @@ class TarjetaView(View):
                 datos = {'message': "Tarjetas no encontrados"}
             return JsonResponse(datos)
 
-
 #Consultas raw
 def mostrar_clientes(request):
  
