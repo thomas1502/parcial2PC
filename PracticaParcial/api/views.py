@@ -2,10 +2,11 @@ from django.http.response import JsonResponse
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-from .models import Producto, Venta, Detalle, Solicitud, Ordenes
+from .models import Producto, Venta, Detalle, Solicitud, Ordenes, Proveedor, Cliente, Banco, Tarjeta
 import json
 from django.http.response import JsonResponse
 from decimal import Decimal, InvalidOperation
+from django.db import connection
 
 # Create your views here.
 class ProductoView(View):
@@ -289,3 +290,124 @@ class OrdenesView(View):
         else:
             datos = {"message": "ERROR, no se encontró la orden"}
         return JsonResponse(datos)
+
+# Ejercicio
+class ProveedorView(View):
+    def get(self, request, id=0):
+        if(id > 0):
+            proveedores = list(Proveedor.objects.filter(id=id).values())
+            if len(proveedores) > 0:
+                proveedor = proveedores[0]
+                datos = {'message': "Success", 'proveedor': proveedor}
+            else:
+                datos = {'message': "Proveedor no encontrado"}
+            return JsonResponse(datos)
+        else:
+            proveedores = list(Proveedor.objects.values())
+            if len(proveedores) > 0:
+                datos = {'message': "Success", 'proveedores': proveedores}
+            else:
+                datos = {'message': "Proveedores no encontrados"}
+            return JsonResponse(datos)
+
+class ClienteView(View):
+    def get(self, request, id=0):
+        if(id > 0):
+            clientes = list(Cliente.objects.filter(id=id).values())
+            if len(clientes) > 0:
+                cliente = clientes[0]
+                datos = {'message': "Success", 'cliente': cliente}
+            else:
+                datos = {'message': "Proveedor no encontrado"}
+            return JsonResponse(datos)
+        else:
+            clientes = list(Cliente.objects.values())
+            if len(clientes) > 0:
+                datos = {'message': "Success", 'clientes': clientes}
+            else:
+                datos = {'message': "Clientes no encontrados"}
+            return JsonResponse(datos)
+        
+class BancoView(View):
+    def get(self, request, id=0):
+        if(id > 0):
+            bancos = list(Banco.objects.filter(id=id).values())
+            if len(bancos) > 0:
+                banco = bancos[0]
+                datos = {'message': "Success", 'banco': banco}
+            else:
+                datos = {'message': "Banco no encontrado"}
+            return JsonResponse(datos)
+        else:
+            bancos = list(Banco.objects.values())
+            if len(bancos) > 0:
+                datos = {'message': "Success", 'bancos': bancos}
+            else:
+                datos = {'message': "Bancos no encontrados"}
+            return JsonResponse(datos)
+        
+class TarjetaView(View):    
+    def get(self, request, id=0, texto=''):
+        bandera = -1
+        index = 0
+        if(texto != ''):
+            resultadoCliente = list(Cliente.objects.filter(nombres=texto).values())
+            if(resultadoCliente):
+                index = resultadoCliente[0]['id']
+                bandera = 0
+            else:
+                resultadoProveedor = list(Proveedor.objects.filter(nombre_proveedor=texto).values())
+                if(resultadoProveedor):
+                    index = resultadoProveedor[0]['id']
+                    bandera = 1
+                else:
+                    resultadoBanco = list(Banco.objects.filter(nombre=texto).values())
+                    if(resultadoBanco):
+                        index = resultadoBanco[0]['id']
+                        bandera = 2
+
+        if(id > 0):
+            tarjetas = list(Tarjeta.objects.filter(id=id).values())
+            if len(tarjetas) > 0:
+                tarjeta = tarjetas[0]
+                datos = {'message': "Success", 'tarjeta': tarjeta}
+            else:
+                datos = {'message': "Tarjeta no encontrado"}
+            return JsonResponse(datos)
+        elif(bandera == 0 and id==0):
+            tarjetas = list(Tarjeta.objects.filter(idCliente_id=index).values())
+            if len(tarjetas) > 0:
+                datos = {'message': "Success", 'tarjeta': tarjetas}
+            else:
+                datos = {'message': "Tarjeta no encontrado"}
+            return JsonResponse(datos)    
+        elif(bandera == 1 and id==0):
+            tarjetas = list(Tarjeta.objects.filter(idProveedor_id=index).values())
+            if len(tarjetas) > 0:
+                datos = {'message': "Success", 'tarjeta': tarjetas}
+            else:
+                datos = {'message': "Tarjeta no encontrado"}
+            return JsonResponse(datos)  
+        elif(bandera == 2 and id==0):
+            tarjetas = list(Tarjeta.objects.filter(idBanco=index).values())
+            if len(tarjetas) > 0:
+                datos = {'message': "Success", 'tarjeta': tarjetas}
+            else:
+                datos = {'message': "Tarjeta no encontrado"}
+            return JsonResponse(datos)    
+        else:
+            tarjetas = list(Tarjeta.objects.values())
+            if len(tarjetas) > 0:
+                datos = {'message': "Success", 'tarjetas': tarjetas}
+            else:
+                datos = {'message': "Tarjetas no encontrados"}
+            return JsonResponse(datos)
+        
+    def raw():
+        consulta_sql = "SELECT * FROM api_tarjeta;"
+        # Ejecuta la consulta SQL
+        with connection.cursor() as cursor:
+            cursor.execute(consulta_sql)
+            resultados = cursor.fetchall()
+        
+        return JsonResponse(resultados)

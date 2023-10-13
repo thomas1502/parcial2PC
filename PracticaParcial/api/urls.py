@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import ProductoView, VentaView, DetalleVentaView, SolicitudesView, OrdenesView
+from .views import ProductoView, VentaView, DetalleVentaView, SolicitudesView, OrdenesView, ProveedorView, ClienteView, BancoView, TarjetaView
 
 urlpatterns=[
     #URL Productos
@@ -23,4 +23,18 @@ urlpatterns=[
     path('ordenes/crear/', OrdenesView.as_view(), name='nueva_orden'),
     path('ordenes/editar/<int:id>/', OrdenesView.as_view(), name='editar_orden'),
     path('ordenes/eliminar/<int:id>/', OrdenesView.as_view(), name='eliminar_orden'),
+
+    #Rutas ejercicio
+    path('proveedor/listado/', ProveedorView.as_view(), name='listar_proveedores'),
+    path('proveedor/listado/<int:id>', ProveedorView.as_view(), name='listar_proveedor'),
+
+    path('cliente/listado/', ClienteView.as_view(), name='listar_clientes'),
+    path('cliente/listado/<int:id>', ClienteView.as_view(), name='listar_cliente'),
+
+    path('banco/listado/', BancoView.as_view(), name='listar_bancos'),
+    path('banco/listado/<int:id>', BancoView.as_view(), name='listar_banco'),
+
+    path('tarjeta/listado/', TarjetaView.as_view(), name='listar_tarjetas'),
+    path('tarjeta/listado/<int:id>', TarjetaView.as_view(), name='listar_tarjeta'),
+    path('tarjeta/listado/<str:texto>', TarjetaView.as_view(), name='listar_tarjeta_cliente'),
 ]
