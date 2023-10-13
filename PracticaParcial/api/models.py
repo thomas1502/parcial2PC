@@ -47,29 +47,40 @@ class Ordenes(models.Model):
         return f"Ordenes {self.id}"
 
 
-#tablas de ejercicio
-
+#Tablas de ejercicio
 class Proveedor(models.Model):
-    Nombre_proveedor = models.CharField(max_length=100)
-    Direccion = models.CharField(max_length=200)
-    Telefono = models.CharField(max_length=15)
+    nombre_proveedor = models.CharField(max_length=100)
+    direccion = models.CharField(max_length=200)
+    telefono = models.CharField(max_length=15)
 
     def __str__(self):
-        return self.Nombre_proveedor
+        return self.nombre_proveedor
 
 class Cliente(models.Model):
-    Nombres = models.CharField(max_length=100)
+    nombres = models.CharField(max_length=100)
     DPI = models.CharField(max_length=20, unique=True)
-    Telefono = models.CharField(max_length=15)
-    Edad = models.PositiveIntegerField()
+    telefono = models.CharField(max_length=15)
+    edad = models.PositiveIntegerField()
 
     def __str__(self):
-        return self.Nombres
+        return self.nombres
 
 class Banco(models.Model):
-    Nombre = models.CharField(max_length=100)
-    Direccion = models.CharField(max_length=200)
-    Telefono = models.CharField(max_length=15)
+    nombre = models.CharField(max_length=100)
+    direccion = models.CharField(max_length=200)
+    telefono = models.CharField(max_length=15)
 
     def __str__(self):
-        return self.Nombre
+        return self.nombre
+    
+class Tarjeta(models.Model):
+    num_tarjeta = models.CharField(max_length=20, unique=True)
+    CVV = models.CharField(max_length=3)
+    fecha_inicio = models.DateTimeField(auto_now_add=True)
+    fecha_final = models.DateField()
+    idCliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
+    idProveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE)
+    idBanco = models.ForeignKey(Banco, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.num_tarjeta
